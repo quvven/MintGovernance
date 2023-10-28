@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
@@ -7,10 +7,18 @@ import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 
-contract MyGovernor is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction {
-    constructor(IVotes _token)
+contract MyGovernor is
+    Governor,
+    GovernorSettings,
+    GovernorCountingSimple,
+    GovernorVotes,
+    GovernorVotesQuorumFraction
+{
+    constructor(
+        IVotes _token
+    )
         Governor("MyGovernor")
-        GovernorSettings(1, 1, 0)
+        GovernorSettings(7200 /* 1 day */, 50400 /* 1 week */, 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4)
     {}
@@ -20,7 +28,7 @@ contract MyGovernor is Governor, GovernorSettings, GovernorCountingSimple, Gover
     function votingDelay()
         public
         view
-        override(IGovernor, GovernorSettings)
+        override(Governor, GovernorSettings)
         returns (uint256)
     {
         return super.votingDelay();
@@ -29,16 +37,18 @@ contract MyGovernor is Governor, GovernorSettings, GovernorCountingSimple, Gover
     function votingPeriod()
         public
         view
-        override(IGovernor, GovernorSettings)
+        override(Governor, GovernorSettings)
         returns (uint256)
     {
         return super.votingPeriod();
     }
 
-    function quorum(uint256 blockNumber)
+    function quorum(
+        uint256 blockNumber
+    )
         public
         view
-        override(IGovernor, GovernorVotesQuorumFraction)
+        override(Governor, GovernorVotesQuorumFraction)
         returns (uint256)
     {
         return super.quorum(blockNumber);
